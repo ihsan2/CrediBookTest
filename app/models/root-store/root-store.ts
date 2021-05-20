@@ -35,7 +35,7 @@ export const RootStoreModel = types.model("RootStore").props({
     }
   },
   async getUserDetail(userId: string) {
-    // await self.environment.api.getUserDetail(userId)
+    await self.environment.api.getUserDetail(userId)
     // try {
     //   const res = await self.environment.api.getUserDetail(userId)
     //   if (res.kind === 'ok') {

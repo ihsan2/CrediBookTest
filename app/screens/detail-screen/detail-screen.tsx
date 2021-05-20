@@ -4,6 +4,8 @@ import { NavigationInjectedProps } from "react-navigation"
 import { Header, Screen, Text, Wallpaper } from "../../components"
 import { color, spacing } from "../../theme"
 import { useStores } from "../../models/root-store"
+import Share from 'react-native-share'
+import ViewShot from "react-native-view-shot";
 
 const FULL: ViewStyle = { flex: 1 }
 const CONTAINER: ViewStyle = {
@@ -58,6 +60,7 @@ const CARD: ViewStyle = {
     borderColor: color.primary,
     paddingHorizontal: spacing[5],
     paddingVertical: spacing[3],
+    backgroundColor: '#fff'
 }
 const BTN: ViewStyle = {
     backgroundColor: color.primary,
@@ -79,8 +82,33 @@ export interface DetailScreenProps extends NavigationInjectedProps<{}> {}
 export const DetailScreen: React.FunctionComponent<DetailScreenProps> = (props) => {
   const rootStore = useStores()
   const {user} = rootStore
+  const [img, setImg] = React.useState(null)
+  const viewShotRef = React.useRef(null)
 
   const goBack = React.useMemo(() => () => props.navigation.goBack(null), [props.navigation])
+
+  const shareItem = () => {
+    const shareOptions = {
+        title: 'Bagikan Melalui',
+        message: `User Detail *${user?.name}*`,
+        social: Share.Social.WHATSAPP,
+        url: img
+      };
+    
+      Share.shareSingle(shareOptions)
+        .then((res) => { console.log(res) })
+        .catch((err) => { err && console.log(err); });
+  }
+
+  const getViewShot = () => {
+    viewShotRef?.current?.capture().then(uri => {
+       setImg(uri)
+    });
+  }
+
+  React.useEffect(() => {
+    getViewShot()
+  }, [])
 
   return (
     <View testID="HomeScreen" style={FULL}>
@@ -93,16 +121,16 @@ export const DetailScreen: React.FunctionComponent<DetailScreenProps> = (props) 
           titleStyle={HEADER_TITLE}
        />
       <Screen style={CONTAINER} preset="scroll" backgroundColor={'#f0f0f0'}>
-          <View style={CARD}>
+            <ViewShot style={CARD} ref={viewShotRef} options={{ format: "jpg", quality: 0.9 }}>
               <View style={AVATARWRAP}>
-                <Image style={AVATAR} source={{uri: user?.avatar}} />
+                <Image style={AVATAR} source={{uri: user?.avatar}} />  
               </View>
               <Text style={DESC} text={`Name: ${user?.name}`} />
               <Text style={DESC} text={`Email: ${user?.email}`} />
-              <Text style={DESC} text={`Gender: ${user?.gender === 'Woman' ? 'Female' : 'Male'}`} />
+              <Text style={DESC} text={`Gender: ${user?.gender}`} />
               <Text style={DESC} text={`Country: ${user?.country}`} />
-          </View>
-          <TouchableOpacity style={BTN}>
+            </ViewShot>
+          <TouchableOpacity style={BTN} onPress={shareItem}>
                <Text style={BTNTEXT} text={`Share Via WhatsApp`} />
           </TouchableOpacity>
       </Screen>
