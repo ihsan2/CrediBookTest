@@ -24,6 +24,7 @@ YellowBox.ignoreWarnings([
   "componentWillMount is deprecated",
   "componentWillReceiveProps is deprecated",
   "Require cycle:",
+  "It appears that you are using old version of react-navigation library"
 ])
 
 /**

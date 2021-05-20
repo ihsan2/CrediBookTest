@@ -61,6 +61,10 @@ export class Api {
       return {
         id: raw.id,
         name: raw.name,
+        email: raw.email,
+        avatar: raw.avatar,
+        gender: raw.gender,
+        country: raw.country
       }
     }
 
@@ -78,7 +82,7 @@ export class Api {
    * Gets a single user by ID
    */
 
-  async getUser(id: string): Promise<Types.GetUserResult> {
+  async getUserDetail(id: string): Promise<Types.GetUserResult> {
     // make the api call
     const response: ApiResponse<any> = await this.apisauce.get(`/users/${id}`)
 
@@ -93,6 +97,10 @@ export class Api {
       const resultUser: Types.User = {
         id: response.data.id,
         name: response.data.name,
+        email: response.data.email,
+        avatar: response.data.avatar,
+        gender: response.data.gender,
+        country: response.data.country,
       }
       return { kind: "ok", user: resultUser }
     } catch {

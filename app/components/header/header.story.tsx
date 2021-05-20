@@ -9,7 +9,7 @@ declare let module
 
 const VIEWSTYLE = {
   flex: 1,
-  backgroundColor: color.storybookDarkBg,
+  backgroundColor: color.primary,
 }
 
 storiesOf("Header", module)
